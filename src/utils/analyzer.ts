@@ -17,7 +17,7 @@ interface MapAccumulator {
   [key: string]: Accumulator;
 }
 
-interface MasterAccumulator {
+export interface MasterAccumulator {
   [key: string]: Accumulator | MapAccumulator;
 }
 
@@ -36,10 +36,6 @@ const processFile = async (file: File) => {
   const messages = await whatsapp.parseString(string);
   const store = storeMessages(messages);
   return store;
-};
-
-const persistObject = (key: string, object: any) => {
-  localStorage.setItem(key, JSON.stringify(object));
 };
 
 export const analyze = async (file: File) => {
@@ -119,14 +115,6 @@ export const analyze = async (file: File) => {
       accumulator.emoji.byType[emoji] += 1;
     }
   }
-
-  persistObject('accumulator', masterAccumulator);
-  persistObject('store', {
-    messages: store.messages,
-    emojiMessages: store.emojiMessages,
-    users: store.users,
-    emojis: store.emojis,
-  });
 
   return masterAccumulator;
 };
