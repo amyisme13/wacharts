@@ -19,6 +19,7 @@ export default Vue.extend({
 <style>
 :root {
   --whatsapp-green: #25d366;
+  --whatsapp-chat-background: #ece5dd;
 }
 
 .v-application {
