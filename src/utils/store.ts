@@ -1,11 +1,30 @@
 import emojiRegex from 'emoji-regex';
-import { Message } from 'whatsapp-chat-parser';
+import whatsapp from 'whatsapp-chat-parser';
+
+interface Message {
+  author: string;
+  message: string;
+  date: Date;
+  type: string;
+}
 
 interface EmojiMessage {
   author: string;
   messageId: number;
   emoji: string;
 }
+
+const determineType = (string: string) => {
+  if (string === '<Media omitted>') {
+    return 'media';
+  }
+
+  if (string === 'This message was deleted') {
+    return 'deleted';
+  }
+
+  return 'text';
+};
 
 export class Store {
   private userSet = new Set<string>();
@@ -22,14 +41,16 @@ export class Store {
     return Array.from(this.emojiSet);
   }
 
-  public insert(message: Message) {
+  public insert(message: whatsapp.Message) {
     if (message.author === 'System') {
       return;
     }
+
     const messageId = this.messages.length;
+    const type = determineType(message.message);
 
     this.userSet.add(message.author);
-    this.messages.push(message);
+    this.messages.push({ ...message, type });
 
     const regex = emojiRegex();
     let match;
@@ -45,7 +66,7 @@ export class Store {
   }
 }
 
-export const storeMessages = (messages: Message[]) => {
+export const storeMessages = (messages: whatsapp.Message[]) => {
   const store = new Store();
   messages.forEach(message => store.insert(message));
 
