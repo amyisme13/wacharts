@@ -1,6 +1,6 @@
 import whatsapp from 'whatsapp-chat-parser';
 
-import { storeMessages } from './store';
+import { storeMessages, Store } from './store';
 import { readFile } from './file';
 
 interface Count {
@@ -21,6 +21,11 @@ export interface MasterAccumulator {
   [key: string]: Accumulator | MapAccumulator;
 }
 
+export interface Result {
+  accumulator: MasterAccumulator;
+  store: Store;
+}
+
 const createCounter = (): Count => ({
   total: 0,
   byType: {},
@@ -38,7 +43,7 @@ const processFile = async (file: File) => {
   return store;
 };
 
-export const analyze = async (file: File) => {
+export const analyze = async (file: File): Promise<Result> => {
   const store = await processFile(file);
 
   const masterAccumulator: MasterAccumulator = {
@@ -116,5 +121,8 @@ export const analyze = async (file: File) => {
     }
   }
 
-  return masterAccumulator;
+  return {
+    accumulator: masterAccumulator,
+    store,
+  };
 };
