@@ -18,7 +18,9 @@
       </v-col>
 
       <v-col cols="12">
-        <v-btn @click="start" outlined>{{ message }}</v-btn>
+        <v-btn outlined @click="start" :loading="processing">
+          {{ message }}
+        </v-btn>
         <input
           v-show="false"
           @change="handleFile"
@@ -33,10 +35,14 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 
+import { analyze } from '../utils/analyzer';
+
 @Component
 export default class Home extends Vue {
-  invalidMessage = 'Invalid file. Select another file.';
   message = 'Start now!';
+  invalidMessage = 'Invalid file. Select another file.';
+
+  processing = false;
 
   get fileInput() {
     return this.$refs.fileInput as HTMLInputElement;
@@ -46,20 +52,18 @@ export default class Home extends Vue {
     this.fileInput.click();
   }
 
-  handleFile() {
+  async handleFile() {
+    this.processing = true;
+
     const files = this.fileInput.files;
-    if (!files || !files.length) {
+    if (!files || !files.length || files[0].type !== 'text/plain') {
       this.message = this.invalidMessage;
+      this.processing = false;
       return;
     }
 
     const file = files[0];
-    if (file.type !== 'text/plain') {
-      this.message = this.invalidMessage;
-      return;
-    }
-
-    console.log(file);
+    this.$store.dispatch('analyzeFile', file);
   }
 }
 </script>
