@@ -18,15 +18,48 @@
       </v-col>
 
       <v-col cols="12">
-        <v-btn outlined>Start now!</v-btn>
-        <input v-show="false" type="file" />
+        <v-btn @click="start" outlined>{{ message }}</v-btn>
+        <input
+          v-show="false"
+          @change="handleFile"
+          ref="fileInput"
+          type="file"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
-<script>
-export default {
-  name: 'Home',
-};
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+
+@Component
+export default class Home extends Vue {
+  invalidMessage = 'Invalid file. Select another file.';
+  message = 'Start now!';
+
+  get fileInput() {
+    return this.$refs.fileInput as HTMLInputElement;
+  }
+
+  start() {
+    this.fileInput.click();
+  }
+
+  handleFile() {
+    const files = this.fileInput.files;
+    if (!files || !files.length) {
+      this.message = this.invalidMessage;
+      return;
+    }
+
+    const file = files[0];
+    if (file.type !== 'text/plain') {
+      this.message = this.invalidMessage;
+      return;
+    }
+
+    console.log(file);
+  }
+}
 </script>
