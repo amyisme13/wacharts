@@ -11,14 +11,16 @@
       </v-col>
 
       <v-col cols="12">
-        <h1 class="display-2 font-weight-bold mb-3">Welcome to WaCharts</h1>
-        <p class="subheading font-weight-regular">
+        <h1 class="display-2 font-weight-bold mb-3 white--text">
+          Welcome to WaCharts
+        </h1>
+        <p class="subheading font-weight-regular white--text">
           Analyze what's going on in your WhatsApp chat using this simple app.
         </p>
       </v-col>
 
       <v-col cols="12">
-        <v-btn outlined @click="start" :loading="processing">
+        <v-btn dark outlined @click="start" :loading="processing">
           {{ message }}
         </v-btn>
         <input
