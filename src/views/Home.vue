@@ -65,7 +65,8 @@ export default class Home extends Vue {
     }
 
     const file = files[0];
-    this.$store.dispatch('analyzeFile', file);
+    await this.$store.dispatch('analyzeFile', file);
+    this.$router.push({ name: 'charts' });
   }
 }
 </script>
