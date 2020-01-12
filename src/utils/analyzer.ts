@@ -8,12 +8,12 @@ interface Count {
   byType: { [key: string]: number };
 }
 
-interface Accumulator {
+export interface Accumulator {
   message: Count;
   emoji: Count;
 }
 
-interface MapAccumulator {
+export interface MapAccumulator {
   [key: string]: Accumulator;
 }
 
@@ -67,7 +67,7 @@ export const analyze = async (file: File): Promise<Result> => {
       const index = mapper[key];
 
       let accumulator: Accumulator;
-      if (index) {
+      if (index !== null) {
         const mapAccumulator = masterAccumulator[key] as MapAccumulator;
         if (!mapAccumulator[index]) {
           mapAccumulator[index] = createAccumulator();
@@ -101,7 +101,7 @@ export const analyze = async (file: File): Promise<Result> => {
       const index = mapper[key];
 
       let accumulator: Accumulator;
-      if (index) {
+      if (index !== null) {
         const mapAccumulator = masterAccumulator[key] as MapAccumulator;
         if (!mapAccumulator[index]) {
           mapAccumulator[index] = createAccumulator();
